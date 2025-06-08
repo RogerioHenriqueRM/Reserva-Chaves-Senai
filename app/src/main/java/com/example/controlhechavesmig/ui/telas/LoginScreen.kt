@@ -14,60 +14,77 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable // componente 
+
+@OptIn(ExperimentalMaterial3Api::class) // Permite usar APIs do Material 3
+@Composable // componente
 fun LoginScreen(
     onContinueClicked: (String) -> Unit,
 ) {
     var email by remember { mutableStateOf("") }
 
-    Scaffold( // Scaffold fornece uma estrutura básica de layout do Material Design
+    // Email de teste
+    val correctEmail = "test@domain.com"
+
+    // Pega o contexto atual (texto) e mostra um Toast com "email incorreto"
+    val context = LocalContext.current
+
+
+    Scaffold( //Estrutura básica do Material Design
         content = { paddingValues ->
-
-
-            Column(
+            Column( // tá definindo uma coluna que vai ocupar tudo o espaço disponivel
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // Aplica o padding do Scaffold
-                    .padding(horizontal = 32.dp), // Padding lateral adicional
+                    .padding(paddingValues)
+                    .padding(horizontal = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
-                //texto e estilo
+                // Apenas textos com estilo simples
                 Text(
                     text = "Reserva-Chan",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 70.dp)
                 )
-                // texto e estilo
                 Text(
                     text = "Coloque sua conta",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                //só texto e estilo
                 Text(
-                    text = "Faz o Login ai bro",
+                    text = "Use 'test@domain.com' para entrar.", // Pra facilitar na hora de escrever lá, obviamente eu tiraria se tivesse mais de um usuario.
                     fontSize = 14.sp,
                     color = Color.Gray,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
                 )
 
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                TextField(
+                    value = email, // variavel de estado  para mudar o campo de texto
+                    onValueChange = { email = it }, //
                     label = { Text("email@domain.com") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Button(
-                    onClick = { onContinueClicked(email) },
+                Button (
+                    //  Lógica de validação
+                    onClick = {
+                        // .trim()  remove espaços em branco no início e no fim.
+                        if (email.trim() == correctEmail) {
+                            // Se for igual, chama a função pra navegar.
+                            onContinueClicked(email)
+                        } else {
+                            // Se for diferente, mensagem de erro.
+                            Toast.makeText(context, "E-mail incorreto!", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    // Fim da lçógic
+                    // Estilo
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
@@ -77,9 +94,8 @@ fun LoginScreen(
                     Text("Continue", color = Color.White, fontSize = 16.sp)
                 }
 
-                Spacer(modifier = Modifier.weight(1f)) // Empurra o texto abaixo para o final
+                Spacer(modifier = Modifier.weight(1f))
 
-                // texto e estilo
                 Text(
                     text = "Politicas de privacidade? Não temos",
                     fontSize = 12.sp,
@@ -91,8 +107,3 @@ fun LoginScreen(
         }
     )
 }
-
-/*
-fun validacao () {
-    val emailValidacao = "emaildoprofessor@gmail.com"
-}*/
